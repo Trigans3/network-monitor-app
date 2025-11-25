@@ -10,18 +10,13 @@ jobs:
     - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y python3-pip git zip unzip openjdk-11-jdk
+        sudo apt install -y python3-pip git zip unzip
         pip install buildozer cython
-    - name: Accept Android licenses
-      run: |
-        mkdir -p ~/.android
-        touch ~/.android/repositories.cfg
-        yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
-      env:
-        ANDROID_HOME: /usr/local/lib/android/sdk
     - name: Build APK
       run: buildozer android debug
       timeout-minutes: 120
