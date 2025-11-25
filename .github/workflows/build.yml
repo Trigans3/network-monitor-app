@@ -14,7 +14,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python3-pip git zip unzip openjdk-11-jdk
-        pip install buildozer
+        pip install buildozer cython
     - name: Build APK
       run: buildozer android debug
       timeout-minutes: 120
