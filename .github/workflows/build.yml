@@ -18,7 +18,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y \
-          python3-pip git zip unopenjdk-11-jdk \
+          python3-pip git zip unzip openjdk-11-jdk \
           autoconf libtool pkg-config zlib1g-dev \
           libncurses5-dev libffi-dev libssl-dev curl \
           ccache
