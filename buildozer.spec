@@ -18,11 +18,10 @@ android.arch = arm64-v8a
 
 orientation = portrait
 
-# Оптимизации для ускорения сборки
-android.skip_update = True
+# ВКЛЮЧАЕМ обновление SDK
+android.skip_update = False
 android.accept_sdk_license = True
 
-# Логирование
 log_level = 1
 
 [buildozer]
