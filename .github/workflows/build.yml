@@ -13,39 +13,50 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup environment
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
-        sudo apt update
-        sudo apt install -y \
-          python3-pip git zip unzip openjdk-8-jdk \
-          autoconf libtool pkg-config zlib1g-dev \
-          libncurses5-dev libtinfo5 cmake \
-          build-essential libffi-dev libssl-dev
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          git \
+          zip \
+          unzip \
+          openjdk-11-jdk \
+          autoconf \
+          libtool \
+          pkg-config \
+          zlib1g-dev \
+          libncurses5-dev \
+          cmake \
+          build-essential \
+          libffi-dev \
+          libssl-dev \
+          curl
 
-    - name: Setup swap
+    - name: Create swap file
       run: |
-        sudo fallocate -l 4G /swapfile
+        sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
         sudo chmod 600 /swapfile
         sudo mkswap /swapfile
         sudo swapon /swapfile
 
-    - name: Install build tools
+    - name: Install Buildozer and dependencies
       run: |
-        pip install buildozer
+        pip install buildozer cython==0.29.33
 
-    - name: Build APK
+    - name: Build APK (skip init)
       run: |
-        buildozer init
         buildozer -v android debug
-      timeout-minutes: 90
+      timeout-minutes: 120
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: network-monitor-apk
+        name: app-release
         path: bin/*.apk
+        retention-days: 7
