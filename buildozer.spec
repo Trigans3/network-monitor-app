@@ -18,10 +18,6 @@ android.arch = arm64-v8a
 
 orientation = portrait
 
-# ВКЛЮЧАЕМ обновление SDK
-android.skip_update = False
-android.accept_sdk_license = True
-
 log_level = 1
 
 [buildozer]
