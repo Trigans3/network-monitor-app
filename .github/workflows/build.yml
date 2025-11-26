@@ -5,20 +5,29 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: kivy/buildozer:latest
-
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y python3-pip git openjdk-11-jdk autoconf libtool
+        
+    - name: Install Buildozer
+      run: pip install buildozer
+        
     - name: Build APK
       run: |
         buildozer -y android debug
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
+      timeout-minutes: 60
+      
+    - uses: actions/upload-artifact@v4
       with:
         name: network-monitor-apk
         path: bin/*.apk
-        retention-days: 7
