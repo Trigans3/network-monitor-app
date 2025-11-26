@@ -18,7 +18,6 @@ android.arch = arm64-v8a
 
 orientation = portrait
 
-# САМОЕ ВАЖНОЕ - разрешаем автоматическую установку
 android.skip_update = False
 android.accept_sdk_license = True
 
