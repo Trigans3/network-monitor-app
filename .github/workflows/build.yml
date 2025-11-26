@@ -5,61 +5,19 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    container:
+      image: kivy/buildozer:latest
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        
-    - name: Install system dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y \
-          python3-pip git zip unzip openjdk-11-jdk \
-          autoconf automake libtool pkg-config zlib1g-dev \
-          libncurses5-dev libffi-dev libssl-dev curl \
-          wget unzip
-        
-    - name: Install Android SDK and Build Tools
-      run: |
-        # Создаем директорию для Android SDK
-        mkdir -p ~/android-sdk
-        cd ~/android-sdk
-        
-        # Скачиваем Command Line Tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip -q commandlinetools-linux-9477386_latest.zip
-        rm commandlinetools-linux-9477386_latest.zip
-        
-        # Правильная структура папок для Android SDK
-        mkdir -p cmdline-tools/latest
-        mv cmdline-tools/* cmdline-tools/latest/
-        
-        # Устанавливаем необходимые компоненты
-        yes | cmdline-tools/latest/bin/sdkmanager --sdk_root=~/android-sdk \
-          "platforms;android-33" \
-          "build-tools;33.0.2" \
-          "platform-tools" \
-          "ndk;25.1.8937393"
-        
-        # Настраиваем переменные окружения
-        echo "ANDROID_HOME=~/android-sdk" >> $GITHUB_ENV
-        echo "ANDROID_SDK_ROOT=~/android-sdk" >> $GITHUB_ENV
-        echo "PATH=~/android-sdk/cmdline-tools/latest/bin:~/android-sdk/platform-tools:~/android-sdk/build-tools/33.0.2:$PATH" >> $GITHUB_ENV
-        
-    - name: Install Buildozer
-      run: |
-        pip install buildozer cython==0.29.33
-        
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Build APK
       run: |
-        buildozer -y -v android debug
-      timeout-minutes: 90
-      
-    - uses: actions/upload-artifact@v4
+        buildozer -y android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
       with:
         name: network-monitor-apk
         path: bin/*.apk
