@@ -18,7 +18,14 @@ android.arch = arm64-v8a
 
 orientation = portrait
 
-log_level = 1
+# Указываем использовать системный SDK
+android.sdk_path = ~/android-sdk
+android.ndk_path = ~/android-sdk/ndk/25.1.8937393
+
+android.skip_update = True
+android.accept_sdk_license = True
+
+log_level = 2
 
 [buildozer]
-log_level = 1
+log_level = 2
