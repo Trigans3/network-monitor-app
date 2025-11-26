@@ -9,25 +9,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        
-    - name: Install system dependencies
+    - name: Setup environment
       run: |
         sudo apt update
-        sudo apt install -y python3-pip git openjdk-11-jdk autoconf libtool
-        
-    - name: Install Buildozer
-      run: pip install buildozer
+        sudo apt install -y python3-pip openjdk-11-jdk git autoconf libtool pkg-config zlib1g-dev
+        pip install buildozer
+        mkdir -p ~/.android/licenses
+        echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.android/licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" > ~/.android/licenses/android-sdk-preview-license
         
     - name: Build APK
       run: |
         buildozer -y android debug
-      timeout-minutes: 60
+      timeout-minutes: 90
       
     - uses: actions/upload-artifact@v4
       with:
-        name: network-monitor-apk
+        name: app-apk
         path: bin/*.apk
